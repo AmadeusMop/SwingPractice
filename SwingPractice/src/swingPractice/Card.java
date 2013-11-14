@@ -5,6 +5,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.swing.ButtonGroup;
+import javax.swing.GroupLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -12,7 +13,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
 
+@SuppressWarnings("serial")
 public class Card extends JPanel {
+	public static final int GRID_BAG = 0;
+	public static final int GROUP = 1;
+	public static final int OTHER = 2;
 	
 	private JRadioButton button1;
 	private JRadioButton button2;
@@ -50,23 +55,64 @@ public class Card extends JPanel {
 	}
 	
 	public Card() {
-		this(0); //Default is GridBagLayout
-	}
-	
-	public Card(int i, String s) {
-		this(i);
+		this(GRID_BAG); //Default is GridBagLayout
 	}
 	
 	private void layOut(int type) {
 		switch(type) {
-		case 0:
+		case GRID_BAG:
 			constructWithGridBagLayout();
 			break;
-		case 2:
+		case GROUP:
+			constructWithGroupLayout();
+		case OTHER:
 			break;
 		default:
-			throw new IllegalArgumentException("Invalid layout type");
+			throw new IllegalArgumentException("Invalid layout type for Card: ");
 		}
+	}
+	
+	private void constructWithGroupLayout() {
+		GroupLayout layout = new GroupLayout(this);
+		setLayout(layout);
+		
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+		
+		layout.setHorizontalGroup(
+				layout.createParallelGroup()
+						.addGroup(layout.createSequentialGroup()
+								.addGroup(layout.createParallelGroup()
+										.addComponent(button1, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+										.addComponent(button2, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+										.addComponent(button3, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+										)
+							    .addGroup(layout.createParallelGroup()
+							    		.addComponent(checkbox1, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							    		.addComponent(checkbox2, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							    		.addComponent(toggleButton)
+							    		)
+							    )
+						.addComponent(scrollPane)
+				);
+		
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+					.addGroup(layout.createParallelGroup()
+							.addComponent(button1)
+				    		.addComponent(checkbox1)
+				    		)
+					.addGroup(layout.createParallelGroup()
+							.addComponent(button2)
+				    		.addComponent(checkbox2)
+				    		)
+				    .addGroup(layout.createParallelGroup()
+							.addComponent(button3)
+				    		.addComponent(toggleButton)
+							)
+				    .addComponent(scrollPane)
+				);
+		
 	}
 	
 	private void constructWithGridBagLayout() {
@@ -106,5 +152,18 @@ public class Card extends JPanel {
 		c.gridheight = 3;
 		c.fill = GridBagConstraints.BOTH;
 		add(scrollPane, c);
+	}
+	
+	public void showState() {
+		System.out.println("Enabled Buttons:");
+		if(button1.isSelected()) System.out.println("\tJRadioButton 1");
+		if(button2.isSelected()) System.out.println("\tJRadioButton 2");
+		if(button3.isSelected()) System.out.println("\tJRadioButton 3");
+		if(checkbox1.isSelected()) System.out.println("\tJCheckBox 1");
+		if(checkbox2.isSelected()) System.out.println("\tJCheckBox 2");
+		if(toggleButton.isSelected()) System.out.println("\tJToggleButton");
+		System.out.print("Text box text: \"");
+		System.out.print(textArea.getText());
+		System.out.println("\"\n");
 	}
 }

@@ -2,26 +2,31 @@ package swingPractice;
 
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class Screen implements ItemListener {
+public class Screen implements ItemListener, ActionListener {
 	
 	private JFrame frame;
 	private JPanel panel;
 	private JPanel cards;
+	
+	private Card current;
 	
 	private Card card1;
 	private Card card2;
 	private Card card3;
 
 	private final String CARD1STRING = "Card with GridBagLayout";
-	private final String CARD2STRING = "Card #2 TBD";
+	private final String CARD2STRING = "Card with GroupLayout";
 	private final String CARD3STRING = "Card #3 TBD";
 	
 	public Screen() {
@@ -31,6 +36,9 @@ public class Screen implements ItemListener {
 		BoxLayout b = new BoxLayout(panel, 1);
 		panel.setLayout(b);
 		cards = new JPanel(new CardLayout());
+		
+		JButton submitButton = new JButton("Print State");
+		submitButton.addActionListener(this);
 
 		JPanel comboBoxPane = new JPanel();
 		String comboBoxItems[] = { CARD1STRING, CARD2STRING, CARD3STRING };
@@ -40,9 +48,10 @@ public class Screen implements ItemListener {
 		comboBoxPane.add(cb);
 		
 		card1 = new Card(0);
+		current = card1;
 		cards.add(card1, CARD1STRING);
 		
-		card2 = new Card(0);
+		card2 = new Card(1);
 		cards.add(card2, CARD2STRING);
 		
 		card3 = new Card(2);
@@ -50,8 +59,14 @@ public class Screen implements ItemListener {
 		
 		panel.add(comboBoxPane);
 		panel.add(cards);
+		panel.add(submitButton);
 		
 		frame.setContentPane(panel);
+		
+		show();
+	}
+	
+	public void show() {
 		frame.pack();
 		frame.setVisible(true);
 	}
@@ -60,5 +75,9 @@ public class Screen implements ItemListener {
 	    CardLayout cl = (CardLayout)(cards.getLayout());
 	    cl.show(cards, (String)evt.getItem());
 	    frame.pack();
+	}
+
+	public void actionPerformed(ActionEvent arg0) {
+		current.showState();
 	}
 }
