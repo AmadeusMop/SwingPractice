@@ -13,6 +13,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
 
+import net.miginfocom.swing.MigLayout;
+
 @SuppressWarnings("serial")
 public class Card extends JPanel {
 	public static final int GRID_BAG = 0;
@@ -65,11 +67,26 @@ public class Card extends JPanel {
 			break;
 		case GROUP:
 			constructWithGroupLayout();
+			break;
 		case OTHER:
+			constructWithMigLayout();
 			break;
 		default:
 			throw new IllegalArgumentException("Invalid layout type for Card: ");
 		}
+	}
+	
+	private void constructWithMigLayout() {
+		MigLayout layout = new MigLayout("wrap 2");
+		setLayout(layout);
+		
+		add(button1);
+		add(checkbox1);
+		add(button2);
+		add(checkbox2);
+		add(button3);
+		add(toggleButton);
+		add(scrollPane, "grow, push, span");
 	}
 	
 	private void constructWithGroupLayout() {
@@ -121,7 +138,7 @@ public class Card extends JPanel {
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 0.1;
-		c.insets = new Insets(5, 5, 5, 5);
+		c.insets = new Insets(1, 5, 3, 5);
 		
 		c.gridx = 0;
 		c.gridy = 0;
